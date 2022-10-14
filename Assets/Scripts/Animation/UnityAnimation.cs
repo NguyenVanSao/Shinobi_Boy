@@ -8,7 +8,7 @@ public class UnityAnimation : BaseAnimation
     [SerializeField] Animator _animControl;
     public override void ChangeAnim()
     {
-        for (int i = 0; i < (int)playerState.Land; i++)
+        for (int i = 1; i <= (int)playerState.Attack_Crouched; i++)
         {
             playerState tmp = (playerState)i;
             if (tmp != player.currentSTATE)

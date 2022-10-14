@@ -28,6 +28,9 @@ public class PlayerController : MonoBehaviour
         Run = 2,
         Jump = 3,
         Land = 4,
+        Attack = 5,
+        Attack_Air = 6,
+        Attack_Crouched = 7,
     }
 
     [SerializeField] List<PhysicsMaterial2D> _friction = new List<PhysicsMaterial2D>();
@@ -46,14 +49,13 @@ public class PlayerController : MonoBehaviour
     {
         checkGround();
         updateState();
-        updateAnim();
+        //updateAnim();
 
     }
 
     private void FixedUpdate()
     {
         Moving();
-
     }
 
 
@@ -88,7 +90,6 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Space) && isGround)
         {
-            Debug.LogError("call here");
             isGround = false;
             _rb.AddForce(new Vector2(0, _jumpForce));
         }
@@ -160,6 +161,22 @@ public class PlayerController : MonoBehaviour
 
     void updateState()
     {
+        if(Input.GetKey(KeyCode.C))
+        {
+            PLAY_STATE = playerState.Attack;
+            return;
+        }
+        else if(Input.GetKey(KeyCode.V))
+        {
+            PLAY_STATE = playerState.Attack_Air;
+            return;
+        }
+        else if(Input.GetKey(KeyCode.B))
+        {
+            PLAY_STATE = playerState.Attack_Crouched;
+            return;
+        }
+
         if (isGround)
         {
             if (_rb.velocity.x != 0)
