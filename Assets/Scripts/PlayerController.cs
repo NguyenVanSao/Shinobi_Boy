@@ -21,17 +21,26 @@ public class PlayerController : MonoBehaviour
 
     public playerState currentSTATE => PLAY_STATE;
     [SerializeField] playerState PLAY_STATE = playerState.Idle;
-    
+
+
+    public atkState AtkState = atkState.Attack_Idle;
     public enum playerState
     {
         Idle = 1,
         Run = 2,
         Jump = 3,
         Land = 4,
-        Attack = 5,
-        Attack_Air = 6,
-        Attack_Crouched = 7,
+        Attack = 5
     }
+
+    public enum atkState
+    {
+        Attack_Idle = 0,
+        Attack_Air = 1,
+        Attack_Crouched = 2,
+    }
+
+
 
     [SerializeField] List<PhysicsMaterial2D> _friction = new List<PhysicsMaterial2D>();
 
@@ -85,10 +94,11 @@ public class PlayerController : MonoBehaviour
         {
             movement.y = _rb.velocity.y;
         }
-
+        if (PLAY_STATE == playerState.Attack)
+            movement.x = 0;
         _rb.velocity = movement;
 
-        if (Input.GetKey(KeyCode.Space) && isGround)
+        if (Input.GetKey(KeyCode.Space) && isGround && PLAY_STATE != playerState.Attack)
         {
             isGround = false;
             _rb.AddForce(new Vector2(0, _jumpForce));
@@ -158,23 +168,41 @@ public class PlayerController : MonoBehaviour
         isGround = false;
 
     }
-
+   
     void updateState()
     {
-        if(Input.GetKey(KeyCode.C))
+        if (PLAY_STATE == playerState.Attack)
         {
-            PLAY_STATE = playerState.Attack;
+           
             return;
         }
-        else if(Input.GetKey(KeyCode.V))
+        if (Input.GetKeyDown(KeyCode.C))
         {
-            PLAY_STATE = playerState.Attack_Air;
-            return;
+            if (PLAY_STATE != playerState.Attack)
+            {
+                PLAY_STATE = playerState.Attack;
+                AtkState = atkState.Attack_Idle;
+                return;
+            }
+
         }
-        else if(Input.GetKey(KeyCode.B))
+        else if (Input.GetKeyDown(KeyCode.V))
         {
-            PLAY_STATE = playerState.Attack_Crouched;
-            return;
+            if (PLAY_STATE != playerState.Attack)
+            {
+                PLAY_STATE = playerState.Attack;
+                AtkState = atkState.Attack_Air;
+                return;
+            } 
+        }
+        else if(Input.GetKeyDown(KeyCode.B))
+        {
+            if (PLAY_STATE != playerState.Attack)
+            {
+                PLAY_STATE = playerState.Attack;
+                AtkState = atkState.Attack_Crouched;
+                return;
+            }
         }
 
         if (isGround)
@@ -194,7 +222,7 @@ public class PlayerController : MonoBehaviour
         
     }
 
-    void updateAnim()
+ /*   void updateAnim()
     {
         for(int i=0; i<=(int)playerState.Land; i++)
         {
@@ -205,7 +233,13 @@ public class PlayerController : MonoBehaviour
                 _animControl.SetBool(tmp.ToString(), true);
                 
         }
+
+      
     }
+ */
 
-
+    public void ReturnIDle()
+    {
+        PLAY_STATE = playerState.Idle;
+    }
 }

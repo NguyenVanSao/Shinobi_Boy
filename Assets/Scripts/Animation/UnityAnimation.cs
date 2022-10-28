@@ -8,7 +8,9 @@ public class UnityAnimation : BaseAnimation
     [SerializeField] Animator _animControl;
     public override void ChangeAnim()
     {
-        for (int i = 1; i <= (int)playerState.Attack_Crouched; i++)
+        
+       
+        for (int i = 1; i <= (int)playerState.Attack; i++)
         {
             playerState tmp = (playerState)i;
             if (tmp != player.currentSTATE)
@@ -16,6 +18,11 @@ public class UnityAnimation : BaseAnimation
             else
                 _animControl.SetBool(tmp.ToString(), true);
 
+        }
+
+        if (player.currentSTATE == playerState.Attack)
+        {
+            _animControl.SetFloat("ATK_ID", (float)player.AtkState);
         }
     }
 
@@ -29,5 +36,10 @@ public class UnityAnimation : BaseAnimation
     void Update()
     {
         ChangeAnim();
+    }
+
+    public void  ReturnIDle()
+    {
+        player.ReturnIDle();
     }
 }
