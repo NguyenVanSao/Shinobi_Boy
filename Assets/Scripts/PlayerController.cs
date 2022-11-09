@@ -2,17 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : Singleton<PlayerController>
 {
     Rigidbody2D _rb;
     Collider2D _colli;
 
     [Header("Config")]
     [SerializeField] float _speed;
+    [SerializeField] float _atkSpeed;
     [SerializeField] float _jumpForce;
     [SerializeField] float _rayLength;
     [SerializeField] bool isGround;
     [SerializeField] Animator _animControl;
+
     
 
     [Header("Watching")]
@@ -30,7 +32,8 @@ public class PlayerController : MonoBehaviour
         Run = 2,
         Jump = 3,
         Land = 4,
-        Attack = 5
+        Attack = 5,
+        Crouched = 6
     }
 
     public enum atkState
@@ -50,7 +53,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         _rb = this.GetComponent<Rigidbody2D>();
-        _colli = this.GetComponent<Collider2D>();
+        _colli = this.GetComponent<CapsuleCollider2D>();
     }
 
     // Update is called once per frame
@@ -58,7 +61,6 @@ public class PlayerController : MonoBehaviour
     {
         checkGround();
         updateState();
-        //updateAnim();
 
     }
 
@@ -94,14 +96,22 @@ public class PlayerController : MonoBehaviour
         {
             movement.y = _rb.velocity.y;
         }
-        if (PLAY_STATE == playerState.Attack)
-            movement.x = 0;
-        _rb.velocity = movement;
 
-        if (Input.GetKey(KeyCode.Space) && isGround && PLAY_STATE != playerState.Attack)
+        if (PLAY_STATE == playerState.Attack || PLAY_STATE == playerState.Crouched)
         {
-            isGround = false;
-            _rb.AddForce(new Vector2(0, _jumpForce));
+            movement.x = 0;
+        }
+
+        _rb.velocity = movement;
+      
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if(isGround)
+            {
+                isGround = false;
+                _rb.AddForce(new Vector2(0, _jumpForce));
+            }
+
         }
 
         if(checkSlope())
@@ -118,10 +128,7 @@ public class PlayerController : MonoBehaviour
         }
 
         _rb.sharedMaterial = _friction[1];
-
     }
-
-
 
     bool checkSlope()
     {
@@ -171,11 +178,33 @@ public class PlayerController : MonoBehaviour
    
     void updateState()
     {
+        if (Input.GetKeyUp(KeyCode.S))
+        {
+            _colli.enabled = true;
+            PLAY_STATE = playerState.Idle;
+        }
+
         if (PLAY_STATE == playerState.Attack)
         {
-           
             return;
         }
+
+        if (PLAY_STATE == playerState.Crouched)
+        {
+            return;
+        }
+
+        if (Input.GetKey(KeyCode.S))
+        {
+            if (isGround && PLAY_STATE != playerState.Crouched)
+            {
+                _colli.enabled = false;
+
+                PLAY_STATE = playerState.Crouched;
+                return;
+            }
+        }
+
         if (Input.GetKeyDown(KeyCode.C))
         {
             if (PLAY_STATE != playerState.Attack)
@@ -219,24 +248,10 @@ public class PlayerController : MonoBehaviour
             else if (_rb.velocity.y < 0)
                 PLAY_STATE = playerState.Land;
         }
-        
-    }
 
- /*   void updateAnim()
-    {
-        for(int i=0; i<=(int)playerState.Land; i++)
-        {
-            playerState tmp = (playerState)i;
-            if (tmp != PLAY_STATE)
-                _animControl.SetBool(tmp.ToString(), false);
-            else
-                _animControl.SetBool(tmp.ToString(), true);
-                
-        }
 
-      
+
     }
- */
 
     public void ReturnIDle()
     {
