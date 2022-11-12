@@ -4,28 +4,45 @@ using UnityEngine;
 
 public class PLCombat : MonoBehaviour
 {
+
     [SerializeField] Transform attackPoint;
     [SerializeField] float attackRange;
+    [SerializeField] float attackSpeed;
     [SerializeField] LayerMask enemyLayers;
+     float timeCountDown;
 
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.C))
+        timeCountDown -= Time.deltaTime;
+
+        if (timeCountDown > 0)
+            return;
+
+        if(Input.GetMouseButtonDown(0))
         {
-            Attack();
+            // animation
+            this.GetComponent<PlayerController>().Attack();
+
+            _Attack();
+            timeCountDown = attackSpeed;
         }
     }
 
-    void Attack()
+    void _Attack()
     {
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
 
         foreach (Collider2D e in hitEnemies)
         {
-            Debug.Log("i hit " + e.name);
+            e.GetComponent<EnemyHeavyBandi>().OnHit(33);
         }
+    }
+
+    void GetHit(float damage)
+    {
+        
     }
 
     void OnDrawGizmosSelected()

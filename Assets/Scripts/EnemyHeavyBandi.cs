@@ -3,23 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyHeavyBandi : Enemy
+public class EnemyHeavyBandi : Character
 {
+
+    [SerializeField] Transform attackPoint;
     [SerializeField] Rigidbody2D _rb;
     [SerializeField] IState currentState;
     [SerializeField] float attackRange;
     [SerializeField] float moveSpeed;
     [SerializeField] bool isRight;
+    [SerializeField] LayerMask playerLayers;
 
 
     private Transform _target;
     public Transform target => this._target;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        OnInit();
-    }
 
     // Update is called once per frame
     void Update()
@@ -45,6 +42,8 @@ public class EnemyHeavyBandi : Enemy
     {
         base.OnDeath();
     }
+
+
 
     public void ChangeState(IState newState)
     {
@@ -119,6 +118,26 @@ public class EnemyHeavyBandi : Enemy
         if(target != null && Vector2.Distance(target.position, transform.position) <= attackRange)
             return true;
         return false;
+    }
+
+    void _Attack()
+    {
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, playerLayers);
+        foreach (Collider2D e in hitEnemies)
+        {
+            e.GetComponent<PlayerController>()._GetHit(33, this.transform);
+
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if(attackPoint == null)
+        {
+            return;
+        }
+
+        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
     }
 
 

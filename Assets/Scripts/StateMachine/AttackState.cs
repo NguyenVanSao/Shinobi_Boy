@@ -12,7 +12,6 @@ public class AttackState : IState
             enemyBandi.ChangeDir(enemyBandi.transform.position.x - enemyBandi.target.position.x > 0);
             enemyBandi.StopMoving();
             enemyBandi.Attack();
-            Debug.LogError("AttackState");
         }
 
         timer = 0;

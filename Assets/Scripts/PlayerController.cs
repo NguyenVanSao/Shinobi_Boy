@@ -2,17 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : Singleton<PlayerController>
-{
+public class PlayerController : Singleton<PlayerController> 
+{ 
     Rigidbody2D _rb;
     Collider2D _colli;
+    Collider2D _colliCrouched;
 
     [Header("Config")]
+    [SerializeField] float hp;
     [SerializeField] float _speed;
-    [SerializeField] float _atkSpeed;
+    [SerializeField] float _atkpeed;
     [SerializeField] float _jumpForce;
     [SerializeField] float _rayLength;
     [SerializeField] bool isGround;
+    [SerializeField] bool doubleJump;
+    bool isDeath => hp <= 0;
     [SerializeField] Animator _animControl;
 
     
@@ -24,8 +28,8 @@ public class PlayerController : Singleton<PlayerController>
     public playerState currentSTATE => PLAY_STATE;
     [SerializeField] playerState PLAY_STATE = playerState.Idle;
 
-
     public atkState AtkState = atkState.Attack_Idle;
+    public getHitState GetHitState = getHitState.GetHit;
     public enum playerState
     {
         Idle = 1,
@@ -33,7 +37,9 @@ public class PlayerController : Singleton<PlayerController>
         Jump = 3,
         Land = 4,
         Attack = 5,
-        Crouched = 6
+        Crouched = 6,
+        Death = 7,  
+        GetHit = 8,
     }
 
     public enum atkState
@@ -43,17 +49,22 @@ public class PlayerController : Singleton<PlayerController>
         Attack_Crouched = 2,
     }
 
-
+    public enum getHitState
+    {
+        GetHit = 0,
+        GetHit_Crouched = 1,
+        GetHit_Air = 2
+    }
 
     [SerializeField] List<PhysicsMaterial2D> _friction = new List<PhysicsMaterial2D>();
-
-
 
     // Start is called before the first frame update
     void Start()
     {
         _rb = this.GetComponent<Rigidbody2D>();
         _colli = this.GetComponent<CapsuleCollider2D>();
+        _colliCrouched = this.GetComponent<BoxCollider2D>();
+        OnInit();
     }
 
     // Update is called once per frame
@@ -61,21 +72,21 @@ public class PlayerController : Singleton<PlayerController>
     {
         checkGround();
         updateState();
-
+        Moving();
+        
     }
 
-    private void FixedUpdate()
+    void OnInit()
     {
-        Moving();
+        hp = 100f;
     }
 
 
     void Moving()
     {
         float dir = Input.GetAxisRaw("Horizontal") * _speed * Time.deltaTime;
-
         Vector3 tmp = this.transform.localScale;
-        if(dir>0)
+        if(dir>0) 
         {
             tmp.x = 1;
         }
@@ -84,7 +95,6 @@ public class PlayerController : Singleton<PlayerController>
             tmp.x = -1;
         }
         this.transform.localScale = tmp;
-
 
         movement.x = Mathf.Cos((_anglePlatform) * Mathf.Deg2Rad) * dir;
 
@@ -97,19 +107,29 @@ public class PlayerController : Singleton<PlayerController>
             movement.y = _rb.velocity.y;
         }
 
-        if (PLAY_STATE == playerState.Attack || PLAY_STATE == playerState.Crouched)
+        if(PLAY_STATE == playerState.Attack || PLAY_STATE == playerState.Crouched)
         {
             movement.x = 0;
         }
 
         _rb.velocity = movement;
-      
+        
+        if(isGround && !Input.GetKey(KeyCode.Space))
+        {
+            doubleJump = false;
+        }
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if(isGround)
+            if(isGround || doubleJump)
             {
+                if(doubleJump)
+                {
+                    _rb.AddForce(new Vector2(0, _jumpForce - 100));
+                }
                 isGround = false;
                 _rb.AddForce(new Vector2(0, _jumpForce));
+                doubleJump = !doubleJump;
             }
 
         }
@@ -159,7 +179,10 @@ public class PlayerController : Singleton<PlayerController>
     void checkGround()
     {
         RaycastHit2D[] hits = new RaycastHit2D[10];
-        _colli.Cast(Vector2.down, hits, _rayLength);
+        if(_colli.enabled)
+            _colli.Cast(Vector2.down, hits, _rayLength);
+        else
+            _colliCrouched.Cast(Vector2.down, hits, _rayLength);
 
         foreach (RaycastHit2D hit in hits)
         {
@@ -175,12 +198,18 @@ public class PlayerController : Singleton<PlayerController>
         isGround = false;
 
     }
-   
     void updateState()
     {
+        if(PLAY_STATE == playerState.Death)
+        {
+            Debug.LogError("Death");
+            return;
+        }
+
         if (Input.GetKeyUp(KeyCode.S))
         {
             _colli.enabled = true;
+            _colliCrouched.enabled = false;
             PLAY_STATE = playerState.Idle;
         }
 
@@ -194,46 +223,23 @@ public class PlayerController : Singleton<PlayerController>
             return;
         }
 
+        if (PLAY_STATE == playerState.GetHit)
+        {
+            return;
+        }
+
         if (Input.GetKey(KeyCode.S))
         {
             if (isGround && PLAY_STATE != playerState.Crouched)
             {
                 _colli.enabled = false;
+                _colliCrouched.enabled = true;
 
                 PLAY_STATE = playerState.Crouched;
                 return;
             }
         }
-
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            if (PLAY_STATE != playerState.Attack)
-            {
-                PLAY_STATE = playerState.Attack;
-                AtkState = atkState.Attack_Idle;
-                return;
-            }
-
-        }
-        else if (Input.GetKeyDown(KeyCode.V))
-        {
-            if (PLAY_STATE != playerState.Attack)
-            {
-                PLAY_STATE = playerState.Attack;
-                AtkState = atkState.Attack_Air;
-                return;
-            } 
-        }
-        else if(Input.GetKeyDown(KeyCode.B))
-        {
-            if (PLAY_STATE != playerState.Attack)
-            {
-                PLAY_STATE = playerState.Attack;
-                AtkState = atkState.Attack_Crouched;
-                return;
-            }
-        }
-
+        
         if (isGround)
         {
             if (_rb.velocity.x != 0)
@@ -248,9 +254,73 @@ public class PlayerController : Singleton<PlayerController>
             else if (_rb.velocity.y < 0)
                 PLAY_STATE = playerState.Land;
         }
+    }
+   
 
+    public void Attack()
+    {
+        if(isGround)
+        {
+            if(_colli.enabled)
+            {
+                if (PLAY_STATE != playerState.Attack)
+                {
+                    PLAY_STATE = playerState.Attack;
+                    AtkState = atkState.Attack_Idle;
+                }
+            }
+            else
+            {
+                if (PLAY_STATE != playerState.Attack)
+                {
+                    PLAY_STATE = playerState.Attack;
+                    AtkState = atkState.Attack_Crouched;
+                }
+            }
+        }
+        else
+        {
+            if (PLAY_STATE != playerState.Attack)
+            {
+                PLAY_STATE = playerState.Attack;
+                AtkState = atkState.Attack_Air;
+            }
+        }
+    }
 
+    public void _GetHit(float damage, Transform transform)
+    {
+        if (!isDeath)
+        {
+            if(PLAY_STATE != playerState.GetHit)
+            {
+                PLAY_STATE = playerState.GetHit;
+                if(isGround)
+                {
+                    if(_colli.enabled)
+                    {
+                        Debug.LogError("Hit");
+                        GetHitState = getHitState.GetHit;
+                    }
+                    else
+                    {
+                        Debug.LogError("CrouchedHit");
+                        GetHitState = getHitState.GetHit_Crouched;
+                    }
+                }
+                else
+                {
+                    Debug.LogError("AirHit");
+                    GetHitState = getHitState.GetHit_Air;
+                }
+            }
 
+            hp -= damage;
+            if(isDeath)
+            {
+                PLAY_STATE = playerState.Death;
+            }
+        }
     }
 
     public void ReturnIDle()
