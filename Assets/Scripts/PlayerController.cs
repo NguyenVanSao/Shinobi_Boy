@@ -73,7 +73,23 @@ public class PlayerController : Singleton<PlayerController>
         checkGround();
         updateState();
         Moving();
-        
+        if (isGround && !Input.GetKey(KeyCode.Space))
+        {
+            doubleJump = false;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (isGround || doubleJump)
+            {
+                Debug.Log("sao");
+                isGround = false;
+                //_rb.AddForce(new Vector2(0, _jumpForce));
+                _rb.velocity = new Vector2(_rb.velocity.x, _jumpForce * Time.deltaTime);
+                doubleJump = !doubleJump;
+            }
+
+        }
     }
 
     void OnInit()
@@ -114,7 +130,7 @@ public class PlayerController : Singleton<PlayerController>
 
         _rb.velocity = movement;
         
-        if(isGround && !Input.GetKey(KeyCode.Space))
+/*        if(isGround && !Input.GetKey(KeyCode.Space))
         {
             doubleJump = false;
         }
@@ -123,16 +139,14 @@ public class PlayerController : Singleton<PlayerController>
         {
             if(isGround || doubleJump)
             {
-                if(doubleJump)
-                {
-                    _rb.AddForce(new Vector2(0, _jumpForce - 100));
-                }
+
                 isGround = false;
-                _rb.AddForce(new Vector2(0, _jumpForce));
+                //_rb.AddForce(new Vector2(0, _jumpForce));
+                _rb.velocity = new Vector2(_rb.velocity.x, _jumpForce * Time.deltaTime);
                 doubleJump = !doubleJump;
             }
 
-        }
+        }*/
 
         if(checkSlope())
         {
@@ -178,7 +192,7 @@ public class PlayerController : Singleton<PlayerController>
 
     void checkGround()
     {
-        RaycastHit2D[] hits = new RaycastHit2D[10];
+        RaycastHit2D[] hits = new RaycastHit2D[20];
         if(_colli.enabled)
             _colli.Cast(Vector2.down, hits, _rayLength);
         else

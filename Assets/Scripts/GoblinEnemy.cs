@@ -22,7 +22,8 @@ public class GoblinEnemy : Character
     {
         if (currentState != null)
         {
-            currentState.OnExecute(this);
+
+          //  currentState.OnExecute(this);
         }
     }
 
@@ -48,7 +49,7 @@ public class GoblinEnemy : Character
     {
         if (currentState != null)
         {
-            currentState.OnExit(this);
+            //currentState.OnExit(this);
         }
 
 
@@ -56,7 +57,7 @@ public class GoblinEnemy : Character
 
         if (currentState != null)
         {
-            currentState.OnEnter(this);
+            //currentState.OnEnter(this);
         }
     }
 

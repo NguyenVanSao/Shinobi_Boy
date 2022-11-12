@@ -27,7 +27,6 @@ public class UnityAnimation : BaseAnimation
 
         if(player.currentSTATE == playerState.GetHit)
         {
-            Debug.LogError((float)player.GetHitState);
             _animControl.SetFloat("GetHit_ID", (float)player.GetHitState);
         }
     }
