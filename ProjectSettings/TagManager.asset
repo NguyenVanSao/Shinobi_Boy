@@ -6,6 +6,11 @@ TagManager:
   tags:
   - Enemy
   - wall
+  - Confiner
+  - DeadBoy
+  - IdlePlayer
+  - FxTemporaire
+  - Trap
   layers:
   - Default
   - TransparentFX
@@ -15,9 +20,9 @@ TagManager:
   - UI
   - Player
   - Enemy
-  - wall
+  - Wall
   - EnemySight
-  - 
+  - Confiner
   - 
   - 
   - 
@@ -43,7 +48,7 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Background
+  - name: Back Ground
     uniqueID: 3207842467
     locked: 0
   - name: Tree
@@ -55,7 +60,7 @@ TagManager:
   - name: Platformer
     uniqueID: 3717184815
     locked: 0
-  - name: wall
+  - name: Wall
     uniqueID: 799597141
     locked: 0
   - name: Enemy
@@ -64,6 +69,9 @@ TagManager:
   - name: Player
     uniqueID: 376622129
     locked: 0
-  - name: EnemySight
+  - name: Enemy Sight
     uniqueID: 1492618231
+    locked: 0
+  - name: UI Enemy
+    uniqueID: 3496854833
     locked: 0

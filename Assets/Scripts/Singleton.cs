@@ -5,7 +5,7 @@ using UnityEngine;
 public class Singleton<T> : MonoBehaviour where T:MonoBehaviour
 {
     private static T _instant = null;
-    public static T instant = _instant;
+    public static T instant => _instant;
 
     private void Awake() {
         if(_instant != null) {

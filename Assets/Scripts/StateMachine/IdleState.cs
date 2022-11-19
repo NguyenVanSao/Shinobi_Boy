@@ -10,7 +10,7 @@ public class IdleState : IState
     {
         enemyBandi.StopMoving();
         timer = 0;
-        randomTime = Random.Range(1f, 2f);
+        randomTime = Random.Range(2f, 3f);
     }
 
     public void OnExecute(EnemyHeavyBandi enemyBandi)
