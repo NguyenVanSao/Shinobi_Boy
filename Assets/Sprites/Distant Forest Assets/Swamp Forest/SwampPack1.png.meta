@@ -3,7 +3,7 @@ guid: 3363509718ff4444e954854ef656d7cb
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -20,11 +20,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
-  ignoreMasterTextureLimit: 0
+  ignoreMipmapLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -63,6 +64,8 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -74,6 +77,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -86,6 +90,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -98,6 +103,20 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
@@ -575,7 +594,7 @@ TextureImporter:
         height: 63
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 38, y: 18, z: 28, w: 25}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -597,32 +616,31 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      SwampPack1_0: -55982601
+      SwampPack1_1: 851391920
+      SwampPack1_10: -1563230144
+      SwampPack1_11: -2007146087
+      SwampPack1_12: 827895684
       SwampPack1_13: 113513721
-      SwampPack1_21: -1274144193
-      SwampPack1_4: -2072507300
-      SwampPack1_18: -1072658461
-      SwampPack1_6: -1815226785
-      SwampPack1_19: 1720507285
       SwampPack1_14: 1504323123
-      SwampPack1_9: 969125637
+      SwampPack1_15: 578917088
+      SwampPack1_16: -199068378
+      SwampPack1_17: 1445527093
+      SwampPack1_18: -1072658461
+      SwampPack1_19: 1720507285
       SwampPack1_2: -842985346
       SwampPack1_20: 1738557277
-      SwampPack1_5: 391403652
+      SwampPack1_21: -1274144193
+      SwampPack1_22: -593121511
       SwampPack1_3: -516612661
+      SwampPack1_4: -2072507300
+      SwampPack1_5: 391403652
+      SwampPack1_6: -1815226785
       SwampPack1_7: -1595570363
       SwampPack1_8: 1851673093
-      SwampPack1_17: 1445527093
-      SwampPack1_16: -199068378
-      SwampPack1_0: -55982601
-      SwampPack1_12: 827895684
-      SwampPack1_1: 851391920
-      SwampPack1_11: -2007146087
-      SwampPack1_22: -593121511
-      SwampPack1_10: -1563230144
-      SwampPack1_15: 578917088
-  spritePackingTag: 
+      SwampPack1_9: 969125637
+  mipmapLimitGroupName: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 

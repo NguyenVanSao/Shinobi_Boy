@@ -19,6 +19,8 @@ public class AttackState : IState
 
     public void OnExecute(EnemyHeavyBandi enemyBandi)
     {
+        if (enemyBandi.isDead) return;
+
         timer += Time.deltaTime;
         if(timer > 1.5f)
         {

@@ -16,4 +16,5 @@ public class Constant : MonoBehaviour
     public static string Attack = "Attack";
     public static string GetHit = "GetHit";
     public static string Enemy_GetHit = "Enemy_GetHit";
+    public static string Enemy_Dead = "Enemy_Dead";
 }

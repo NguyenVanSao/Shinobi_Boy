@@ -14,6 +14,8 @@ public class PatrolState : IState
 
     public void OnExecute(EnemyHeavyBandi enemyBandi)
     {
+        if (enemyBandi.isDead) return;
+
         timer += Time.deltaTime;
         if(enemyBandi.target != null)
         {

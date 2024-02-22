@@ -55,7 +55,7 @@ public class EnemyHeavyBandi : Character
 
 
         currentState = newState;
-
+        
         if(currentState != null)
         {
             currentState.OnEnter(this);
@@ -64,6 +64,8 @@ public class EnemyHeavyBandi : Character
 
     internal void setTarget(Transform transform)
     {
+        if (isDead) return;
+
         this._target = transform;
 
         if(IsTargetInRange())

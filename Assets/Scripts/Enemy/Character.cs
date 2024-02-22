@@ -30,8 +30,9 @@ public class Character : MonoBehaviour
 
     protected virtual void OnDeath()
     {
+        SoundManager.instant.PlaySound(Constant.Enemy_Dead);
         ChangeAnim("Death");
-        Destroy(this.gameObject, 3);
+        Destroy(this.gameObject, 1.5f);
     }
 
     protected void ChangeAnim(string animName)
@@ -53,8 +54,6 @@ public class Character : MonoBehaviour
     {
         if(!isDead)
         {
-            Debug.Log("PlaySound");
-            SoundManager.instant.PlaySound(Constant.Enemy_GetHit);
             ChangeAnim("Hurt");
             currentHealth -= damage;
 
